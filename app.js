@@ -3,7 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 
 const exphbs = require('express-handlebars')
-const port = 3000
+const Todo = require('./models/todo')
 
 mongoose.connect('mongodb://localhost/todo-list')
 
@@ -17,13 +17,17 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-app.set('view engine', 'handlebars')
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.set('view engine', 'hbs')
 
 app.get('/', (req, res) => {
-  res.render('index')
+  // 拿到全部todo資料
+  Todo.find()
+    .lean()
+    .then(todos => res.render('index', { todos }))
+    .catch(error => console.error(error))
 })
 
-app.listen(port, () => {
-  console.log(`App is running on http://localhost:${port}`)
+app.listen(3000, () => {
+  console.log(`App is running on http://localhost:3000`)
 })

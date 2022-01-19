@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
   // 拿到全部todo資料
   Todo.find()
     .lean()
+    .sort({ name: 'asc' })
     .then(todos => res.render('index', { todos }))
     .catch(error => console.error(error))
 })
@@ -66,7 +67,7 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const { name, isDone } = req.body 
+  const { name, isDone } = req.body
   // const name = req.body.name
   // const idDone = req.body.isDone
   return Todo.findById(id)
